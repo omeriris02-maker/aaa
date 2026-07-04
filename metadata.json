@@ -1,0 +1,6 @@
+{
+  "name": "Sırçalı Konya Guide",
+  "description": "Official premium tourism guide of Sırçalı Hotel for exploring historic places, mosques, museums, tours, and culinary culture of Konya.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
