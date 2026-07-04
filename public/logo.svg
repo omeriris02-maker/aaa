@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Outer rectangular boundary -->
+  <rect x="15" y="15" width="70" height="70" stroke-width="2.2" />
+  
+  <!-- Outer top interlocking bars -->
+  <path d="M 15 28 H 85" stroke-width="1.8" />
+  <path d="M 33 15 V 32 H 67 V 15" stroke-width="1.8" />
+  
+  <!-- Symmetrical left side of the arch -->
+  <path d="M 38 85 V 54 C 38 45, 44 41, 50 37" stroke-width="3.2" />
+  
+  <!-- Symmetrical right side of the arch -->
+  <path d="M 62 85 V 54 C 62 45, 56 41, 50 37" stroke-width="3.2" />
+  
+  <!-- Central circular/teardrop interlocking loop at the top of the arch -->
+  <path d="M 50 37 C 44 31, 44 23, 50 17 C 56 23, 56 31, 50 37 Z" stroke-width="2.5" />
+</svg>

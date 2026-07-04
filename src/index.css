@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Poppins", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-bordo: #A0423D;
+  --color-gold: #D4A574;
+  --color-sircali-dark: #333333;
+  --color-sircali-light: #FDFBF7;
+  --color-sircali-accent: #E8E8E8;
+  --color-sircali-muted: #999999;
+}
+
+/* Custom styles for Leaflet popups and Maplibre GL controls if needed */
+.maplibregl-popup-content {
+  border-radius: 12px !important;
+  padding: 0 !important;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+  border: 1px solid #E8E8E8;
+  background-color: #FFFFFF !important;
+  color: #333333 !important;
+}
+
+.maplibregl-popup-close-button {
+  color: #999999 !important;
+  padding: 8px !important;
+  font-size: 16px !important;
+}
+
+/* Custom scrollbars for high-end look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4A574/40;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A0423D;
+}
