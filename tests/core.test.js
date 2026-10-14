@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {randomBytes} from 'node:crypto';
+import {occupancy,price,budgetFits,peers,diverse,freeModel,demo,safeUrl} from '../server/core.js';
+import {seal,unseal} from '../server/vault.js';
+test('190 oda OOO paydaları doğru',()=>{const r=occupancy(190,185,1);assert.equal(r.physical.toFixed(2),'97.37');assert.equal(r.sellable.toFixed(2),'97.88');assert.throws(()=>occupancy(190,190,1))});
+test('8 araştırmacı ilk turda diğerlerini görmez',()=>{const events=demo('190 185 OOO',8).events;for(let i=0;i<8;i++)assert.deepEqual(peers(events,8,i,'research'),{targets:[],data:[]})});
+test('8 rol hedefli eleştiri ve revizyon mesajlarını alır',()=>{const events=demo('190 185',8).events;for(let i=0;i<8;i++){const critique=peers(events,8,i,'critique');assert.equal(critique.data.length,2);assert(!critique.targets.includes(i));const revision=peers(events,8,i,'revision');assert(revision.data.some(e=>e.stage==='critique'&&e.targets.includes(i)))}});
+test('çeşitlilik aile tekrarından önce gelir',()=>assert.deepEqual(diverse([{id:'a',family:'qwen'},{id:'b',family:'qwen'},{id:'c',family:'glm'}]).map(m=>m.id),['a','c','b']));
+test('ücretli OpenRouter modeli ve sıfır fiyat olmayan free alias reddedilir',()=>{assert(freeModel('openrouter','x:free',{prompt:'0',completion:'0'}));assert(!freeModel('openrouter','x:free',{prompt:'0.1',completion:'0'}));assert(!freeModel('openrouter','x',{prompt:'0',completion:'0'}));assert(!freeModel('deepseek','deepseek-flash'));assert(!freeModel('groq','ovh/gpt-oss-120b'))});
+test('rezervasyonlar bütçeye dahil, üst maliyet doğru',()=>{assert(!budgetFits(.2,.25,.1,.5));assert(budgetFits(.1,.1,.1,.5));assert.equal(price(12000,1500,{input:.3,output:1.2}),.0054)});
+test('anahtar kasası yalnız doğru kök ve sağlayıcı ile çözülür',()=>{const key=randomBytes(32),value='fixture-test-key-not-real',cipher=seal(value,key,'groq');assert(!JSON.stringify(cipher).includes(value));assert.equal(unseal(cipher,key,'groq'),value);assert.throws(()=>unseal(cipher,key,'deepseek'));assert.throws(()=>unseal(cipher,randomBytes(32),'groq'));cipher.data=Buffer.from('tampered').toString('base64');assert.throws(()=>unseal(cipher,key,'groq'))});
+test('demo gerçek DeepSeek cevabı olarak etiketlenmez',()=>{const d=demo('190 185 OOO',8);assert(d.answer.includes('DeepSeek çağrısı yapılmadı'));assert.equal(d.events.filter(e=>e.stage==='research').length,8);assert.equal(d.events.filter(e=>e.stage==='critique').length,8);assert.equal(d.events.filter(e=>e.stage==='revision').length,8)});
+test('HTTPS kaynakları kabul, yerel IP ve credential URL reddedilir',()=>{assert(safeUrl('https://docs.oracle.com/a'));for(const u of ['http://example.com','https://127.0.0.1','https://169.254.169.254','https://user:password@example.com','https://[::1]'])assert(!safeUrl(u))});
