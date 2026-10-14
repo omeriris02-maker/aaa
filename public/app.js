@@ -1,7 +1,7 @@
 const el=document.getElementById('app');
 const roles=['Baş Araştırmacı','Derin Analist','Eleştirel Ajan','Teknik Uzman','Kaynak Doğrulayıcı','Strateji Uzmanı','Alternatif Fikir Üreticisi','Karşıt Görüş Ajanı'];
 const tabs=['Konsey','Tartışma','Kaynaklar','Geçmiş','Bağlantılar','Hakem ayarları'];
-const labels={health:'Gerçek sağlık testi',healthy:'Sağlıklı',untested:'Test edilmedi',quota:'Kota sınırı',timeout:'Zaman aşımı',error:'Hata',research:'Bağımsız bulgular',critique:'Eleştiri',revision:'Revizyon',judge:'DeepSeek hakemi',plan:'Görev planı',sources:'Kaynaklar',activity:'Çalışıyor',failure:'Başarısız',warning:'Bilgi',queued:'Sırada',processing:'Çalışıyor',completed:'Tamamlandı',failed:'Başarısız',cancelled:'Durduruldu',testing:'Sağlık testi'};
+const labels={disconnected:'Anahtar bağlı değil',health:'Gerçek sağlık testi',healthy:'Sağlıklı',untested:'Test edilmedi',quota:'Kota sınırı',timeout:'Zaman aşımı',error:'Hata',research:'Bağımsız bulgular',critique:'Eleştiri',revision:'Revizyon',judge:'DeepSeek hakemi',plan:'Görev planı',sources:'Kaynaklar',activity:'Çalışıyor',failure:'Başarısız',warning:'Bilgi',queued:'Sırada',processing:'Çalışıyor',completed:'Tamamlandı',failed:'Başarısız',cancelled:'Durduruldu',testing:'Sağlık testi'};
 let state={tab:'Konsey',mode:'demo',signed:false,configured:true,status:null,run:null,events:[],history:[],question:'',error:'',notice:'',busy:false,hostingMode:'trial',filter:'all'},stream=null,timer=null;
 let setupToken=new URLSearchParams(location.hash.slice(1)).get('setup')||'';if(setupToken)history.replaceState(null,'',location.pathname);
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
