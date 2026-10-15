@@ -29,3 +29,12 @@ The current service is FREE trial hosting, not always-on production. It sleeps w
 Opaque HttpOnly/Secure/SameSite session cookies, per-IP persisted login attempt controls, CSRF origin checks, owner-only single-use bootstrap, AES-256-GCM credential encryption bound to provider, root key in Render secret environment, no client-returned secret values, parameterized SQL, fixed provider URLs, free-only panel and no paid fallback, bounded turns and 14-minute run limit, conservative reservation for unknown paid timeout.
 
 Test mocks exist only in ignored local artifacts; normal production start does not import them.
+
+## 2026-10-15 — Cloudflare and free-model comparison
+
+- Added server-only Cloudflare Workers AI credentials (encrypted token + 32-hex Account ID); separate explicit Workers Free/no purchased credits confirmation. Account billing tier is asserted by the owner, not remotely inspected by this token.
+- Fixed host/account route, strict inference allowlist: Llama 3.3 70B Instruct FP8 Fast and Mistral Small 3.1 24B Instruct. Paid-required frontier model IDs rejected at call time, even if a DB row is incorrectly labeled free.
+- Added persistent comparison worker: up to 12 unique free model identities, 3 calls each, no DeepSeek. Records raw replies, heuristic check results and elapsed time in model metadata. Failed comparisons disable a model; successful results influence selection. Scores are limited automated checks, not model intelligence rankings.
+- 33 automated tests passed. Mobile form browser fixture passed, including cleared token/no localStorage/no overflow. Real local PostgreSQL worker integration with MOCK inference passed: 2 models × 3 calls, saved quality results, zero paid calls or cost rows. No user API credentials used in local tests.
+- Live Cloudflare authentication/inference and real comparison results remain unverified until the owner connects an account and starts the comparison from their authenticated app session. No user password/session is available to this coding environment.
+- Official provider research: research/2026-10-15-provider-audit.md. GitHub Models retired and Ollama free access conditional; neither newly enabled.
