@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {modelIdentity,uniqueModels,allocate,claim,roleModels} from '../server/identity.js';
+const models=Array.from({length:10},(_,i)=>({id:'groq:model-'+i,name:'family/model-'+i,free:true,enabled:true}));
+test('aynı model sağlayıcı, yayıncı ve ücretsiz yönlendirme etiketinden bağımsız tek kimliktir',()=>{assert.equal(modelIdentity('groq:openai/gpt-oss-20b'),modelIdentity('openrouter:openai/gpt-oss-20b:free'));assert.equal(modelIdentity('models/gemini-2.5-flash-001'),modelIdentity('gemini-2.5-flash'));assert.notEqual(modelIdentity('gpt-oss-20b'),modelIdentity('gpt-oss-120b'));assert.equal(uniqueModels([{name:'openai/gpt-oss-20b'},{name:'gpt-oss-20b:free'}]).length,1)});
+test('sekiz rol önceden sekiz ayrı modele ayrılır, yetersiz çeşitlilik reddedilir',()=>{assert.throws(()=>allocate(models.slice(0,5),8),/şu an 5/);const s=allocate(models,8);assert.equal(new Set(Object.values(s.assignments)).size,8);assert.equal(Object.keys(s.modelOwners).length,8)});
+test('fallback başka role ait modeli devralamaz; boş yedek yalnız bir role ayrılır',async()=>{const s=allocate(models,8);assert.throws(()=>claim(s,1,models[0]),/başka bir ajana/);claim(s,0,models[8]);assert.throws(()=>claim(s,1,models[8]),/başka bir ajana/);assert.ok(!roleModels(models,s,1).includes(models[8]));assert.equal(roleModels(models,s,0)[0].id,models[8].id)});
+test('sağlayıcının bildirdiği gerçek model başka role aitse çıktı reddedilir',()=>{const s=allocate(models,8);assert.throws(()=>claim(s,0,{name:models[1].name},true),/model tekrarı engellendi/)});
+test('kalıcı JSON durumuyla yeniden başladıktan sonra da model kilidi korunur',()=>{const s=JSON.parse(JSON.stringify(allocate(models,8)));assert.throws(()=>claim(s,7,models[0]),/başka bir ajana/);claim(s,0,models[0]);assert.equal(s.assignments[0],models[0].id)});
