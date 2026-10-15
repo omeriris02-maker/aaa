@@ -38,3 +38,9 @@ Test mocks exist only in ignored local artifacts; normal production start does n
 - 33 automated tests passed. Mobile form browser fixture passed, including cleared token/no localStorage/no overflow. Real local PostgreSQL worker integration with MOCK inference passed: 2 models × 3 calls, saved quality results, zero paid calls or cost rows. No user API credentials used in local tests.
 - Live Cloudflare authentication/inference and real comparison results remain unverified until the owner connects an account and starts the comparison from their authenticated app session. No user password/session is available to this coding environment.
 - Official provider research: research/2026-10-15-provider-audit.md. GitHub Models retired and Ollama free access conditional; neither newly enabled.
+
+## OpenCode free DeepSeek integration
+
+Official OpenCode repository documentation confirms `deepseek-v4.1-flash-free`, free input/output, direct inference API, and anonymous access for free chat models. Added only this model, fixed endpoint, no Authorization header or credential lookup, no paid OpenCode IDs. It joins panel/benchmark selection as a distinct identity; paid direct DeepSeek remains the referee. First production startup after adding this provider performs one anonymous small health call if the owner already confirmed free usage. A model is enabled only after a complete visible response. Local environment direct OpenCode requests returned HTTP 403; this is not a successful live inference test. Runtime logs record whether the Render health call succeeds. Mock provider and real local Postgres integration cover the keyless route and zero paid costs.
+
+Sources: https://github.com/anomalyco/opencode/blob/dev/services/www/src/docs/content/console/models.mdx and https://github.com/anomalyco/opencode/blob/dev/services/www/src/docs/content/console/api/inference.mdx . Free offer is temporary; no expiration date guaranteed.
