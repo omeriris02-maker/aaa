@@ -57,3 +57,9 @@ Aynı Türkçe görevler: doğru otel paydaları; sağlanmamış bir S numarası
 - https://inference-docs.cerebras.ai/support/rate-limits
 - https://docs.mistral.ai/admin/billing-usage/subscriptions.md
 - https://docs.mistral.ai/inference/pricing.md
+
+## OpenCode ek inceleme ve düzeltme
+
+Resmî repo, `deepseek-v4.1-flash-free` fiyatını ücretsiz ve genel belgede ücretsiz sohbeti anahtarsız gösteriyor. Ancak gerçek istek (15 Ekim 2026, resmî `/zen/v1/chat/completions` uyumluluk yolu) HTTP 403 JSON ile `FreeTierError: OpenCode's free tier can only be used from within OpenCode` döndürdü. Bu çalışma koşulu Council AI kullanımını dışlıyor. Model bu uygulamada kapatıldı; uygulama kimliği taklidi veya kısıt aşma yapılmadı. Önceki yalnız 403/bağlantı açıklaması bu ayrıntıyı kaçırmıştı. Katalogdaki ücretsiz fiyat, üçüncü taraf uygulamada kullanım izni kanıtı değildir.
+
+Kaynak kodda uyumluluk yolu: https://github.com/anomalyco/opencode/blob/dev/packages/console/app/src/lib/inference-proxy.ts . Genel belge: https://github.com/anomalyco/opencode/blob/dev/services/www/src/docs/content/console/api/inference.mdx . Çelişkinin ayrımı: genel endpoint belgeleri ile gerçek ücretsiz katmanın istemci kullanım kuralı aynı şey değil.
