@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import {freeModel,family} from '../server/core.js';
+function fixture(alwaysCut=false){let calls=0;const bodies=[];const q=async(sql)=>sql.startsWith('SELECT * FROM ca_provider_state')?[{next_at:new Date(0)}]:sql.startsWith('UPDATE ca_provider_state')?[{provider:'gemini'}]:[];const context=vm.createContext({q,secret:async()=> 'FIXTURE_NOT_A_REAL_KEY',freeModel,family,Buffer,AbortSignal,Response,Date,setTimeout,clearTimeout,fetch:async(url,init)=>{calls++;bodies.push(JSON.parse(init.body));return Response.json({candidates:[{finishReason:alwaysCut||calls===1?'MAX_TOKENS':'STOP',content:{parts:[{text:'Kısa ve kaynaklı sonuç.'}]}}],usageMetadata:{promptTokenCount:20,candidatesTokenCount:20}})}});const source=fs.readFileSync(new URL('../server/providers.js',import.meta.url),'utf8').replace(/^import .*;\n/gm,'').replace(/export /g,'');vm.runInContext(source+'\nproviders.gemini.interval=0;globalThis.run=fallback;',context);return {context,bodies,calls:()=>calls}}
+const model={id:'gemini:test',name:'gemini-2.5-flash',provider:'gemini',free:true,enabled:true};
+test('kesilen ücretsiz yanıt kısa talimatla bir kez düzeltilir',async()=>{const f=fixture();const r=await f.context.run([model],0,'Kısa konuş.','Soru');assert.equal(r.finishReason,'STOP');assert.equal(f.calls(),2);assert.equal(r.failures.length,1);assert.equal(f.bodies[0].generationConfig.maxOutputTokens,1200);assert.match(f.bodies[1].systemInstruction.parts[0].text,/en fazla 50 kelime/)});
+test('iki kez kesilen çıktı başarı sayılmaz ve ücretli hakeme geçilmez',async()=>{const f=fixture(true);await assert.rejects(()=>f.context.run([model,{...model,id:'deepseek:test',provider:'deepseek',free:false}],0,'Kısa konuş.','Soru'),/Ücretsiz panel modelleri yanıt vermedi/);assert.equal(f.calls(),2)});
